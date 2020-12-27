@@ -7,19 +7,25 @@ Two or more command line args are required:
 2. The list of cities to process.
 """
 
-def html_to_stats(html_file, *cities):
-  strings_to_match = list(map(lambda city: ">SK {}</span></div>".format(city), cities))
-
+def html_to_stats(html_file, city):
   with open(html_file, 'r') as f:
     lines = f.readlines()
-  possibleMatches = filter(lambda line: any(map(lambda x: x in line, strings_to_match)), lines)
-  if len(possibleMatches != 1):
+  possibleMatches = list(filter(lambda line: city in "".join(line[1].split()), enumerate(lines)))
+  if len(possibleMatches) != 1:
     print("ERROR ")
     print(possibleMatches)
+  else:
+    line_with_new_cases = list(filter(lambda x: "(+" in x, lines[possibleMatches[0][0]:]))[0]
+    print(line_with_new_cases)
+    
+    new_cases = line_with_new_cases.split('(+')[1].split(')')[0].strip()
+    date = list(filter(lambda line: "Stand: " in line, lines))[0].split("Stand: ")[1].split(",")[0]
+    
+    return date, new_cases
 
 if __name__ == "__main__":
   if (len(sys.argv) < 3):
     print (README)
   else: 
-    html_to_stats(sys.argv[1], sys.argv[2:])
+    print(html_to_stats(sys.argv[1], " ".join(sys.argv[2:])))
 
