@@ -14,6 +14,6 @@ if __name__ == "__main__":
     os.system('rm -rf out')
     pdf_to_html.convert_pdf_to_html(BASE_DIR + '/' + file, 'out')
     date, cases = html_to_stats.html_to_stats('out' + '/' + 'page2.html', 'Freiburg')
-    file_date = file.split(".")[0].replace("-",".")
+    file_date = file.split(".")[0]
     
     add_new_stats_to_db(file_date, [cases], 'db.csv')

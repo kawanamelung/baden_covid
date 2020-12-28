@@ -6,13 +6,13 @@ import html_to_stats
 
 BASE_DIR = 'pdf_files'
 
-os.system("mkdir out pdf_files"
+os.system("mkdir out pdf_files")
 
 def add_new_stats_to_db(date, stats, db_file_name):
   with open(db_file_name, 'a+') as f:
     f.write("{},{}\n".format(date, ",".join(stats)))
 
-if __name__ == "__main__":
+def fetch_and_add_todays_stats(db):
   currentDay = datetime.now().day
   currentMonth = datetime.now().month
   currentYear = datetime.now().year
@@ -27,6 +27,9 @@ if __name__ == "__main__":
   os.system('rm -rf out')
   pdf_to_html.convert_pdf_to_html(BASE_DIR + '/' + file, 'out')
   date, cases = html_to_stats.html_to_stats('out' + '/' + 'page2.html', 'Freiburg')
-  file_date = file.split(".")[0].replace("-",".")
+  file_date = file.split(".")[0]
     
-  add_new_stats_to_db(file_date, [cases], 'db.csv')
+  add_new_stats_to_db(datetime.now().date(), [cases], db)
+
+if __name__ == "__main__":
+  fetch_and_add_todays_stats('db.csv') 
